@@ -265,20 +265,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Fonts} from '../../../assets';
 import {useNavigation} from '@react-navigation/native';
 import {movies} from '../../helpers/dummy.movies';
+import { addImage } from '../../redux/action';
+import { useDispatch } from 'react-redux';
 
 const Home = () => {
   const navigation = useNavigation();
+  const dispatch=useDispatch();
+
+  const handlePress = (item) => {
+    navigation.navigate('BookMovie', {
+      // img: item.img,
+      data: item,
+    });
+    dispatch(addImage(item.img));
+  };
 
   const renderItem = ({item}) => (
     <TouchableOpacity
       activeOpacity={0.7}
       style={{marginRight: 20}}
-      onPress={() =>
-        navigation.navigate('BookMovie', {
-          img: item.img,
-          data:item
-        })
-      }>
+      onPress={()=>handlePress(item)}>
       <Image source={item.img} style={styles.movieImage} />
     </TouchableOpacity>
   );

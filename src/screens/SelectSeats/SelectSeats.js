@@ -15,8 +15,11 @@ import {
   verticalScale,
 } from '../../helpers/size.helper';
 import {Fonts} from '../../../assets';
+import { useRoute } from '@react-navigation/native';
 
 const SelectSeats = ({navigation}) => {
+  const route = useRoute();
+  console.log(route.params,"..route.params");
   const generateSeats = () => {
     let numRow = 8;
     let numColumn = 3;
@@ -53,7 +56,7 @@ const SelectSeats = ({navigation}) => {
   const itemWidth = Dimensions.get('window').width;
   const itemHeight = Dimensions.get('window').height;
 
-  console.log(JSON.stringify(twoDSeatArray, null, 2), 'twoD');
+  // console.log(JSON.stringify(twoDSeatArray, null, 2), 'twoD');
 
   const selectSeat = (index, subindex, num) => {
     if (!twoDSeatArray[index][subindex].taken) {
@@ -317,7 +320,7 @@ const SelectSeats = ({navigation}) => {
               }}>
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => navigation.navigate('Tickets')}>
+                onPress={() => navigation.navigate('Tickets',{data:route.params.data})}>
                 <Image
                   source={require('../../images/buy.png')}
                   style={{height: 70, width: 70}}

@@ -15,18 +15,19 @@ import {Fonts} from '../../../assets';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import {Dimensions} from 'react-native';
+import { useDispatch, useSelector } from "react-redux";
 
 const MAX_DESCRIPTION_LENGTH = 100; // Maximum length of the description to show before truncation
 
 const BookMovie = () => {
   const route = useRoute();
-  const [showFullDescription, setShowFullDescription] = useState(false);
-  const [colorChangesOnPress, setColorChangesOnPress] = useState(true);
-  const [selectedIndex, setSelectedIndex] = useState(null);
   const carouselRef = useRef(null);
-
   const navigation = useNavigation();
-  let image = require('../../images/doctor-strange.png');
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [colorChangesOnPress, setColorChangesOnPress] = useState(true);
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const image=useSelector((state)=>state.reducer.image)
 
   const [carouselData, setCarouselData] = useState([
     {
@@ -53,6 +54,20 @@ const BookMovie = () => {
       updatedCarouselData[selectedIndex] = carouselData[index]; // Replace the current item with the selected item
       setCarouselData(updatedCarouselData); // Update the carouselData state
       carouselRef.current.snapToItem(index); // Scroll to the selected item
+    }
+  };
+
+  const handleReservationButtonPress = () => {
+    if (selectedIndex !== null) {
+      // console.log(route.params.data, selectedData, "..data, selectedData");
+      console.log(image,"image");
+      const selectedData = carouselData[selectedIndex];
+      navigation.navigate('SelectSeats', {
+        data: route.params.data,
+        selectedDay: selectedData.day,
+        selectedDate: selectedData.date,
+        selectedTime: selectedData.time,
+      });
     }
   };
 
@@ -195,7 +210,8 @@ const BookMovie = () => {
       end={{x: 1, y: 1}}
       style={styles.container}>
       <ImageBackground
-        source={route.params.img}
+        // source={route.params.img}
+        source={image}
         // style={{height: 480, width: '100%'}}
         style={{
           width: '100%',
@@ -316,7 +332,9 @@ const BookMovie = () => {
       {colorChangesOnPress && (
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => navigation.navigate('SelectSeats',{data:route.params.data})}>
+          // onPress={() => navigation.navigate('SelectSeats',{data:route.params.data})}>
+              onPress={handleReservationButtonPress}>
+
           <LinearGradient
             colors={['rgba(255,83,192,1)', 'rgba(255,83,192,0.3)']}
             start={{x: 0, y: 0}}
