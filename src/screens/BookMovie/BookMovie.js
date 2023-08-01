@@ -15,19 +15,22 @@ import {Fonts} from '../../../assets';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import {Dimensions} from 'react-native';
-import { useDispatch, useSelector } from "react-redux";
+import {useDispatch, useSelector} from 'react-redux';
+import {addDate, addDay, addTime} from '../../redux/action';
+import Toast from 'react-native-simple-toast';
 
 const MAX_DESCRIPTION_LENGTH = 100; // Maximum length of the description to show before truncation
 
 const BookMovie = () => {
   const route = useRoute();
+  const dispatch = useDispatch();
   const carouselRef = useRef(null);
   const navigation = useNavigation();
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [colorChangesOnPress, setColorChangesOnPress] = useState(true);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-  const image=useSelector((state)=>state.reducer.image)
+  const image = useSelector(state => state.reducer.image);
 
   const [carouselData, setCarouselData] = useState([
     {
@@ -58,12 +61,20 @@ const BookMovie = () => {
   };
 
   const handleReservationButtonPress = () => {
+    if (selectedIndex === null) {
+      Toast.showWithGravity(
+        "Please select the slot!",
+        Toast.LONG,
+        Toast.CENTER
+      )
+    }
     if (selectedIndex !== null) {
-      // console.log(route.params.data, selectedData, "..data, selectedData");
-      console.log(image,"image");
       const selectedData = carouselData[selectedIndex];
+      dispatch(addDate(selectedData.date));
+      dispatch(addDay(selectedData.day));
+      dispatch(addTime(selectedData.time));
       navigation.navigate('SelectSeats', {
-        data: route.params.data,
+        // data: route.params.data,
         selectedDay: selectedData.day,
         selectedDate: selectedData.date,
         selectedTime: selectedData.time,
@@ -221,34 +232,34 @@ const BookMovie = () => {
         <LinearGradient
           colors={['rgba(19, 11, 43, 0)', '#130B2B']}
           style={{height: '100%', top: 460}}></LinearGradient>
-          <View style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 25,
-          }}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image
-              source={require('../../images/icon-left.png')}
-              style={{
-                width: moderateScale(44),
-                height: moderateScale(44),
-                marginLeft: 14,
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image
-              source={require('../../images/nav.png')}
-              style={{
-                width: moderateScale(44),
-                height: moderateScale(44),
-                marginRight: 14,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
+        <View style={{position: 'absolute', top: 0, width: '100%'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 25,
+            }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Image
+                source={require('../../images/icon-left.png')}
+                style={{
+                  width: moderateScale(44),
+                  height: moderateScale(44),
+                  marginLeft: 14,
+                }}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image
+                source={require('../../images/nav.png')}
+                style={{
+                  width: moderateScale(44),
+                  height: moderateScale(44),
+                  marginRight: 14,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
         <View>
           <Text
@@ -333,8 +344,7 @@ const BookMovie = () => {
         <TouchableOpacity
           activeOpacity={0.7}
           // onPress={() => navigation.navigate('SelectSeats',{data:route.params.data})}>
-              onPress={handleReservationButtonPress}>
-
+          onPress={handleReservationButtonPress}>
           <LinearGradient
             colors={['rgba(255,83,192,1)', 'rgba(255,83,192,0.3)']}
             start={{x: 0, y: 0}}

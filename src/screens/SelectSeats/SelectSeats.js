@@ -6,8 +6,9 @@ import {
   Image,
   Dimensions,
   StatusBar,
+  ScrollView
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   horizontalScale,
@@ -15,11 +16,16 @@ import {
   verticalScale,
 } from '../../helpers/size.helper';
 import {Fonts} from '../../../assets';
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const SelectSeats = ({navigation}) => {
   const route = useRoute();
-  console.log(route.params,"..route.params");
+  const day = useSelector(state => state.reducer.day);
+  const date = useSelector(state => state.reducer.date);
+  const time = useSelector(state => state.reducer.time);
+  const showTime = `April ${date}, 2022`;
+  console.log(route.params, '..route.params');
   const generateSeats = () => {
     let numRow = 8;
     let numColumn = 3;
@@ -50,11 +56,18 @@ const SelectSeats = ({navigation}) => {
     }
     return rowArray;
   };
-
   const [twoDSeatArray, setTwoDSeatArray] = useState(generateSeats());
   const [selectedSeatArray, setSelectedSeatArray] = useState([]);
-  const itemWidth = Dimensions.get('window').width;
-  const itemHeight = Dimensions.get('window').height;
+  const [price, setPrice] = useState(0);
+  const [selectedSeats, setSelectedSeats]=useState("None")
+
+  useEffect(() => {
+    setSelectedSeats(
+      selectedSeatArray.length > 0
+        ? selectedSeatArray.map(seat => ` ${seat}`).join(', ')
+        : 'None'
+    );
+  }, [selectedSeatArray]);
 
   // console.log(JSON.stringify(twoDSeatArray, null, 2), 'twoD');
 
@@ -73,6 +86,7 @@ const SelectSeats = ({navigation}) => {
           setSelectedSeatArray(array);
         }
       }
+      setPrice(array.length * 5);
       setTwoDSeatArray(temp);
     }
   };
@@ -216,15 +230,17 @@ const SelectSeats = ({navigation}) => {
               Selected
             </Text>
           </View>
+
           <LinearGradient
             colors={['#3B1578', '#5172B3', '#FF53C0']}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={{
-              width: '100%',
+              width: Dimensions.get('window').width,
               height: verticalScale(200),
               flexDirection: 'row',
             }}>
+              {/* <ScrollView> */}
             <View>
               <View style={{marginLeft: 30, marginTop: 30}}>
                 <View style={{flexDirection: 'row'}}>
@@ -238,7 +254,7 @@ const SelectSeats = ({navigation}) => {
                       color: 'white',
                       marginLeft: 10,
                     }}>
-                    April 23, 2022
+                    {showTime}
                   </Text>
                   <Image
                     source={require('../../images/white-dot.png')}
@@ -254,7 +270,7 @@ const SelectSeats = ({navigation}) => {
                       fontFamily: Fonts.PoppinsRegular,
                       color: 'white',
                     }}>
-                    6 p.m.
+                    {time}
                   </Text>
                 </View>
 
@@ -280,13 +296,18 @@ const SelectSeats = ({navigation}) => {
                       marginTop: 6,
                     }}
                   />
+                  <View style={{width:130}}>
                   <Text
                     style={{
                       fontFamily: Fonts.PoppinsRegular,
                       color: 'white',
                     }}>
-                    Seat 9, 10
+                    Seat: {selectedSeats}
+                    {/* {selectedSeatArray.slice(1, 4).map((item, index, arr) => {
+                      return item + (index + arr.length - 1 ? '' : ',');
+                    })} */}
                   </Text>
+                  </View>
                 </View>
 
                 <View style={{flexDirection: 'row'}}>
@@ -300,7 +321,7 @@ const SelectSeats = ({navigation}) => {
                       color: 'white',
                       marginLeft: 10,
                     }}>
-                    Total: $30
+                    Total: ${price}
                   </Text>
                 </View>
               </View>
@@ -308,25 +329,28 @@ const SelectSeats = ({navigation}) => {
 
             <View
               style={{
-                marginTop: 50,
-                marginLeft: 85,
+                marginTop: 40,
+                marginLeft: 'auto',
                 backgroundColor: '#2E1371',
-                height: 90,
-                width: 90,
+                height: 100,
+                width: 100,
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderTopLeftRadius: 45,
-                borderBottomLeftRadius: 45,
+                borderTopLeftRadius: 100,
+                borderBottomLeftRadius: 100,
               }}>
               <TouchableOpacity
                 activeOpacity={0.7}
-                onPress={() => navigation.navigate('Tickets',{data:route.params.data})}>
+                onPress={() =>
+                  navigation.navigate('Tickets', {data: route.params.data})
+                }>
                 <Image
                   source={require('../../images/buy.png')}
                   style={{height: 70, width: 70}}
                 />
               </TouchableOpacity>
             </View>
+            {/* </ScrollView> */}
           </LinearGradient>
         </View>
       </View>
@@ -337,7 +361,3 @@ const SelectSeats = ({navigation}) => {
 export default SelectSeats;
 
 const styles = StyleSheet.create({});
-
-
-
-

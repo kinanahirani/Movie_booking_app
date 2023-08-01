@@ -12,10 +12,12 @@ import LinearGradient from 'react-native-linear-gradient';
 import {moderateScale, verticalScale} from '../../helpers/size.helper';
 import {Fonts} from '../../../assets';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const Tickets = () => {
   const route=useRoute();
   const navigation = useNavigation();
+  const image = useSelector(state => state.reducer.image);
   return (
     <LinearGradient colors={['#004381', '#00234D']} style={{flex: 1}}>
       <View
@@ -70,7 +72,8 @@ const Tickets = () => {
       <View style={{flex: 1, overflow: 'hidden'}}>
         <ImageBackground
           // source={require('../../images/doctor-strange.png')}
-          source={route.params.data.img }
+          // source={route.params.data.img }
+          source={image}
           style={{
             alignSelf: 'center',
             width: moderateScale(250),
@@ -166,7 +169,7 @@ const Tickets = () => {
                   fontSize: 13,
                   marginLeft: 2,
                 }}>
-                June 19
+                April 19
               </Text>
             </View>
 

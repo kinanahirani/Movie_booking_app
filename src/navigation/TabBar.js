@@ -85,7 +85,7 @@ const TabBar = () => {
           },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Profile"
         component={Home}
         options={{
@@ -134,7 +134,7 @@ const TabBar = () => {
             );
           },
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Tickets"
         component={Tickets}
@@ -257,30 +257,6 @@ const TabBar = () => {
                     <Image source={require('../images/Profile.png')} />
                   </ImageBackground>
                 ) : (
-                  // <LinearGradient
-                  //   colors={['#3B1578', '#5172B3', '#FF53C0']}
-                  //   start={{x: 0, y: 0.5}}
-                  //   end={{x: 1, y: 0.5}}
-                  //   style={{
-                  //     alignItems: 'center',
-                  //     justifyContent: 'center',
-                  //     marginBottom: 30,
-                  //     marginRight: 15,
-                  //     borderRadius: moderateScale(40),
-                  //   }}>
-                  //   <View
-                  //     style={{
-                  //       height: moderateScale(80),
-                  //       width: moderateScale(80),
-                  //       borderRadius: moderateScale(40),
-                  //       alignItems: 'center',
-                  //       justifyContent: 'center',
-                  //       borderWidth: 2,
-                  //       borderColor: '#60FFC9',
-                  //     }}>
-                  //     <Image source={require('../images/Profile.png')} />
-                  //   </View>
-                  // </LinearGradient>
                   <Image source={require('../images/Profile.png')} />
                 )}
               </View>
